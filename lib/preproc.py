@@ -50,17 +50,21 @@ def format_entry(entry: Dict[str, str], journals: List[Dict[str, str]], conferen
     elif len(date) == 4 or not date:
         date = entry['Publication year'].strip() + '-01-01'
     all_labels = [x.strip() for x in entry['Labels filed in'].strip().split(';')]
-    categories = [x for x in all_labels if ' - ' not in x]
-    methods = [x.split(' - ')[1] for x in all_labels if ' - ' in x]
+    fields = [x.split(' - ')[1] for x in all_labels if x.startswith('FLD')]
+    methods = [x.split(' - ')[1] for x in all_labels if x.startswith('MET')]
+    study_system = [x.split(' - ')[1] for x in all_labels if x.startswith('SS')]
+    topics = [x.split(' - ')[1] for x in all_labels if x.startswith('TOP')]
     formatted_entry = {
-        'Item type':  {'type': 'select',       'value': entry['Item type'].strip()},
-        'Authors':    {'type': 'multi_select', 'value': entry['Authors'].strip().split(',')},
-        'Title':      {'type': 'title',        'value': entry['Title'].strip().replace('{','').replace('}','')},
-        'Venues':     {'type': 'multi_select', 'value': venue},
-        'Date':       {'type': 'date',         'value': date},
-        'Link':       {'type': 'url',          'value': selected_link},
-        'Categories': {'type': 'multi_select', 'value': categories},#, 'color': [COLOR_MAP[cat]['color'] for cat in categories]}
-        'Methods':    {'type': 'multi_select', 'value': methods},
+        'Item type':        {'type': 'select',       'value': entry['Item type'].strip()},
+        'Authors':          {'type': 'multi_select', 'value': entry['Authors'].strip().split(',')},
+        'Title':            {'type': 'title',        'value': entry['Title'].strip().replace('{','').replace('}','')},
+        'Venues':           {'type': 'multi_select', 'value': venue},
+        'Date Published':   {'type': 'date',         'value': date},
+        'Link':             {'type': 'url',          'value': selected_link},
+        'Fields':           {'type': 'multi_select', 'value': fields},#, 'color': [COLOR_MAP[cat]['color'] for cat in categories]}
+        'Methods':          {'type': 'multi_select', 'value': methods},
+        'Study System':     {'type': 'multi_select', 'value': study_system},
+        'Topics':           {'type': 'multi_select', 'value': topics},
     }
     if not 'to read' in entry['Folders filed in'].lower():  
         formatted_entry['Status'] = {'type': 'select', 'value': 'Done'}

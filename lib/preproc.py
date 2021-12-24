@@ -11,7 +11,6 @@ def match(string, candidates) -> str:
 def format_entry(entry: Dict[str, str], journals: List[Dict[str, str]], conferences: List[Dict[str, str]]) -> Dict[str, Dict[str, str]]:
     """ Produces a dictionary in format column_name: {type: x, value: y} for each value in the entry"""
     # Select the conference shortname based on proceedings
-    print(entry)
     if entry['Item type'] == 'Journal Article':
         if 'Full journal' in entry.keys() and entry['Full journal']:
             venue = [j['short'] for j in journals if j['name'] == entry['Full journal'].strip()]
@@ -33,6 +32,8 @@ def format_entry(entry: Dict[str, str], journals: List[Dict[str, str]], conferen
             venue = [entry['Archive prefix'].strip()]
     elif entry['Item type'] == 'Book Chapter':
         venue = [entry['Book title'].strip()]
+    elif entry['Item type'] == 'Book':
+        venue = [entry['Title'].strip()]
     # Arxiv links are privileged
     links = [x for x in entry['URLs'].strip().split(';')]
     arxiv_links = [x for x in links if 'arxiv' in x]
